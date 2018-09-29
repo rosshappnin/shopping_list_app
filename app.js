@@ -36,6 +36,14 @@ function createItem() {
     var name = $('#input-name').val();
     var price = $('#input-price').val();
 
+    // convert invalid price values to 0
+    if(isNaN(price) || price.length == 0) {
+        price = 0;
+    }
+
+    // format price to two decimal places
+    price =  parseFloat(price).toFixed(2);
+
     // create item object
     var item = {'name' : name, 'price' : price};
 
