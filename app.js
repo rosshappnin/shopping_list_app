@@ -3,10 +3,50 @@
  */
 $(function(){
     read();
+
+
+    /**
+     * Add item button click handler
+     * 
+     * 1 - Invoked when the 'Add item buttom is clicked
+     * 2 - Calls the create item function
+     * 3 - Clears the form inputs.
+     */ 
+    $('#form-add-item').on('submit', function(event){
+        event.preventDefault();
+        
+        createItem();
+        
+        // clear inputs
+        $('#input-name').val('');
+        $('#input-price').val('');
+    });
 });
 
 // stores the state of the shopping list
 var listObj;
+
+
+/**
+ * 1 - Gathers item data submitted in the add new item form
+ * 2 - Creates a new item object with the data
+ * 3 - Adds the item object to the ListObj items array
+ */
+function createItem() {
+    var name = $('#input-name').val();
+    var price = $('#input-price').val();
+
+    // create item object
+    var item = {'name' : name, 'price' : price};
+
+    // adds the object to the listObj items array
+    listObj['items'].push(item);
+    
+    // log the new listObj to console
+    console.log(listObj);
+
+    refresh();
+}
 
 /**
  * 1 - Fetches the shopping list data from the server,

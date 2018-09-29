@@ -10,3 +10,9 @@ input.name {
     width: 85%;
     margin-left: 15px;
 }
+
+#button-create,
+#input-max-spend {
+    background-color:#ff6961;
+    color: #fff;
+}
