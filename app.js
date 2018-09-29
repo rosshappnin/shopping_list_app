@@ -21,6 +21,15 @@ $(function(){
         $('#input-name').val('');
         $('#input-price').val('');
     });
+
+
+    // Delete item button click handler
+    $('#table-items').on('click', '.button-delete', function() {
+        var rowEL = $(this).closest('tr');
+        deleteItem(rowEL);
+    });
+
+
 });
 
 // stores the state of the shopping list
@@ -51,6 +60,27 @@ function createItem() {
     listObj['items'].push(item);
     
     // log the new listObj to console
+    console.log(listObj);
+
+    refresh();
+}
+
+
+/**
+ * 1 - Removes an item from listObj by index
+ * 2 - calls refresh
+ * 
+ * @param {jQuery} rowEL The tr row element of the item
+ */
+function deleteItem(rowEL) {
+
+    // get the index of the item
+    var index = rowEL.attr('data-index');
+
+    // remove the item at the specified index
+    listObj['items'].splice(index, 1);
+
+    // log the updated listObj to console
     console.log(listObj);
 
     refresh();
@@ -94,6 +124,7 @@ function refresh() {
     // extract the items from the list object
     var items = [];
 
+    // check that the listObj has an items property, if not exit.
     if (listObj.hasOwnProperty("items")) {
         items = listObj.items;
     } else {
@@ -110,9 +141,10 @@ function refresh() {
     $.each(items, function(i, item) {
     
         tbodyEL.append('\
-            <tr>\
+            <tr data-index="' + i + '">\
                 <td><input type="text" class="name" value="' + item.name + '"></td>\
                 <td><input type="number" step="any" class="price" value="' + item.price + '"></td>\
+                <td><button class="button-delete"><i class="glyphicon glyphicon-trash"></i>Delete</button></td>\
             </tr>\
         '); 
     });
