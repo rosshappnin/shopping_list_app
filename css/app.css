@@ -11,8 +11,23 @@ input.name {
     margin-left: 15px;
 }
 
-#button-create,
-#input-max-spend {
+#button-create {
     background-color:#ff6961;
     color: #fff;
+}
+
+button i {
+    padding-right: 5px;
+}
+
+.item-column {
+    width: 55%;
+}
+
+.price-column {
+    width: 10%;
+}
+
+.actions-column {
+    width: 35%;
 }
