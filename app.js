@@ -22,6 +22,17 @@ $(function(){
         $('#input-price').val('');
     });
 
+    
+    // Item check button click handler
+    $('#table-items').on('click', '.button-check', function() {
+        var rowEL = $(this).closest('tr');
+
+        // toggle checked class
+        rowEL.toggleClass("checked");
+
+        updateItem(rowEL);
+    });
+
 
     // Delete item button click handler
     $('#table-items').on('click', '.button-delete', function() {
@@ -67,10 +78,35 @@ function createItem() {
 
 
 /**
+ * 1 - Updates the specified rowEL item
+ * 2 - calls refresh
+ * 
+ * @param jquery rowEL 
+ */
+function updateItem(rowEL){
+    
+    // get the index of the item
+    var index = rowEL.attr('data-index');
+
+    // set the items is_checked property to either 0 or 1, 
+    // depending on whether or not it has the 'checked' class 
+    var newIsChecked = (rowEL.hasClass("checked") ? 1 : 0);
+
+    // update the item
+    listObj['items'][index].is_checked = newIsChecked;
+
+    // log the updated listObj to console
+    console.log(listObj);
+    
+    refresh();
+}
+
+
+/**
  * 1 - Removes an item from listObj by index
  * 2 - calls refresh
  * 
- * @param {jQuery} rowEL The tr row element of the item
+ * @param jQuery rowEL The tr row element of the item
  */
 function deleteItem(rowEL) {
 
@@ -139,12 +175,18 @@ function refresh() {
 
     // foreach list item, add it to the table
     $.each(items, function(i, item) {
-    
+
+        // if item is checked add class checked.
+        var trClass = (item.is_checked == 1 ? 'class="checked"' : '');
+        
         tbodyEL.append('\
-            <tr data-index="' + i + '">\
+            <tr ' + trClass + ' data-index="' + i +'">\
                 <td><input type="text" class="name" value="' + item.name + '"></td>\
                 <td><input type="number" step="any" class="price" value="' + item.price + '"></td>\
-                <td><button class="button-delete"><i class="glyphicon glyphicon-trash"></i>Delete</button></td>\
+                <td>\
+                    <button class="button-check"><i class="glyphicon glyphicon-ok"></i>Check</button>\
+                    <button class="button-delete"><i class="glyphicon glyphicon-trash"></i>Delete</button>\
+                </td>\
             </tr>\
         '); 
     });
