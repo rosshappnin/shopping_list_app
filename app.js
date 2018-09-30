@@ -55,25 +55,28 @@ var listObj;
 function createItem() {
     var name = $('#input-name').val();
     var price = $('#input-price').val();
+    var is_checked = 0;
 
-    // convert invalid price values to 0
-    if(isNaN(price) || price.length == 0) {
-        price = 0;
-    }
+    $.ajax({
+        url: 'api/list/item/create.php',
+        method: 'POST',
+        contentType: 'application/json',
 
-    // format price to two decimal places
-    price =  parseFloat(price).toFixed(2);
+        data: JSON.stringify({list_id: LIST_ID,
+                                name: name,
+                                price: price,
+                                is_checked: is_checked
+                            }),
 
-    // create item object
-    var item = {'name' : name, 'price' : price};
-
-    // adds the object to the listObj items array
-    listObj['items'].push(item);
-    
-    // log the new listObj to console
-    console.log(listObj);
-
-    refresh();
+        success: function(response) {
+            console.log(response);
+            read();
+        },
+        error: function(response) {
+            console.log("ERROR:");
+            console.log(response);
+        }
+    });
 }
 
 var listObj; // stores the state of the shopping list

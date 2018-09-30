@@ -3,6 +3,9 @@ class Item {
  
     // database table name
     const TABLE_NAME = "items";
+
+    // database connection
+    private $conn;
  
     // object properties
     public $id;
@@ -10,6 +13,12 @@ class Item {
     public $name;
     public $price;
     public $is_checked;
+
+
+    // constructor with $db as database connection
+    public function __construct($db){
+        $this->conn = $db;
+    }
  
     /**
      * Returns an array of Items with their list_id = $list_id
@@ -68,4 +77,46 @@ class Item {
         // return an array of results
         return $itemsArr;
     }
+
+
+        /**
+         * Inserts a new Item into the database
+         * Uses the Item object properties as values
+         * 
+         * @return boolean returns true if succesful, false otherwise
+         * 
+         */
+        function create(){
+
+            // query to insert record
+            $query = "INSERT INTO
+                        " . item::TABLE_NAME . "
+                    SET
+                    list_id = :list_id,
+                    name = :name,
+                    price = :price,
+                    is_checked = :is_checked";
+    
+            // prepare query
+            $stmt = $this->conn->prepare($query);
+    
+            // sanitize
+            $this->list_id = (int) htmlspecialchars(strip_tags($this->list_id));
+            $this->name = (string) htmlspecialchars(strip_tags($this->name));
+            $this->price = (float) htmlspecialchars(strip_tags($this->price));
+            $this->is_checked = (int) htmlspecialchars(strip_tags($this->is_checked));
+    
+            // bind values
+            $stmt->bindParam(":list_id", $this->list_id);
+            $stmt->bindParam(":name", $this->name);
+            $stmt->bindParam(":price", $this->price);
+            $stmt->bindParam(":is_checked", $this->is_checked);
+    
+            // execute query
+            if($stmt->execute()){
+                return true;
+            }
+    
+            return false;
+        }
 }
