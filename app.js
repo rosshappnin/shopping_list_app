@@ -1,3 +1,6 @@
+var listObj; // stores the state of the shopping list
+const LIST_ID = 1; // Temporaliy (whilst in developemt) hard code the list id
+
 /**
  *  On page load start the app
  */
@@ -33,6 +36,25 @@ $(function(){
         updateItem(rowEL);
     });
 
+    // Item name changed handler
+    $('#table-items').on('change', '.name', function() {
+        var rowEL = $(this).closest('tr');
+        updateItem(rowEL);
+    });
+
+    // Item price changed handler
+    $('#table-items').on('change', '.price', function() {
+        var rowEL = $(this).closest('tr');
+        // only update price if greater than zero
+        var newPrice = rowEL.find('.price').val();
+        if (newPrice < 0) { 
+            newPrice = 0;
+            rowEL.find('.price').val(newPrice.toFixed(2)); 
+        } else {
+            updateItem(rowEL);
+        }
+    })
+
 
     // Delete item button click handler
     $('#table-items').on('click', '.button-delete', function() {
@@ -40,11 +62,7 @@ $(function(){
         deleteItem(rowEL);
     });
 
-
 });
-
-// stores the state of the shopping list
-var listObj;
 
 
 /**
@@ -79,31 +97,38 @@ function createItem() {
     });
 }
 
-var listObj; // stores the state of the shopping list
-const LIST_ID = 1; // Temporaliy (whilst in developemt) hard code the list id
-
 /**
- * 1 - Updates the specified rowEL item in ListObj
- * 2 - calls refresh
+ * 1 - Updates the item in the database with the specified id
+ * 2 - calls read on success
  * 
  * @param jquery rowEL 
  */
-function updateItem(rowEL){
+function updateItem(rowEL) {
     
-    // get the index of the item
-    var index = rowEL.attr('data-index');
-
-    // set the items is_checked property to either 0 or 1, 
-    // depending on whether or not it has the 'checked' class 
+    var id = rowEL.attr('data-id');
+    var newName = rowEL.find('.name').val();
+    var newPrice = rowEL.find('.price').val();
     var newIsChecked = (rowEL.hasClass("checked") ? 1 : 0);
 
-    // update the item
-    listObj['items'][index].is_checked = newIsChecked;
-
-    // log the updated listObj to console
-    console.log(listObj);
-    
-    refresh();
+    $.ajax({
+        url: 'api/list/item/update.php',
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({id:id, 
+                                name: newName, 
+                                price: newPrice,
+                                is_checked: newIsChecked
+                            }),
+        success: function(response) {
+            console.log(response);
+            
+            read();
+        },        
+        error: function(response) { 
+            console.log("ERROR:");
+            console.log(response); 
+         }
+    });
 }
 
 
@@ -194,7 +219,7 @@ function refresh() {
         var trClass = (item.is_checked == 1 ? 'class="checked"' : '');
         
         tbodyEL.append('\
-            <tr ' + trClass + ' data-id="' + item.id + '" data-index="' + i +'">\
+            <tr ' + trClass + ' data-id="' + item.id + '">\
                 <td><input type="text" class="name" value="' + item.name + '"></td>\
                 <td><input type="number" step="any" class="price" value="' + item.price + '"></td>\
                 <td>\

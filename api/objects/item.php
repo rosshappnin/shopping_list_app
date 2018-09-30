@@ -120,6 +120,48 @@ class Item {
         return false;
     }
 
+
+    /**
+     * Updates the item inthe datbase
+     * using the object properties as new values
+     * 
+     * @return boolean returns true if succesful, false otherwise
+     */
+    function update(){
+
+        // update query
+        $query = "UPDATE
+            " . item::TABLE_NAME . "
+        SET
+            name = :name,
+            price = :price,
+            is_checked = :is_checked
+        WHERE
+            id = :id";
+
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->id = (int) htmlspecialchars(strip_tags($this->id));
+        $this->name = (string) htmlspecialchars(strip_tags($this->name));
+        $this->price = (float) htmlspecialchars(strip_tags($this->price));
+        $this->is_checked = (int) htmlspecialchars(strip_tags($this->is_checked));
+        
+        // bind values
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(":name", $this->name);
+        $stmt->bindParam(":price", $this->price);
+        $stmt->bindParam(":is_checked", $this->is_checked);
+        
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
+
         
     /**
      * Deletes an item from th database where its id = $this->id
