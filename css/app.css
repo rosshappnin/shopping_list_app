@@ -20,6 +20,14 @@ button i {
     padding-right: 5px;
 }
 
+tr.checked {
+    background-color: #e6e6e6 !important;
+}
+
+tr.checked input {
+    color: #bebebe;
+}
+
 .item-column {
     width: 55%;
 }

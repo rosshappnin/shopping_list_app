@@ -50,7 +50,7 @@ var listObj;
 /**
  * 1 - Gathers item data submitted in the add new item form
  * 2 - Creates a new item object with the data
- * 3 - Adds the item object to the ListObj items array
+ * 3 - Adds the item object to the database
  */
 function createItem() {
     var name = $('#input-name').val();
@@ -83,7 +83,7 @@ var listObj; // stores the state of the shopping list
 const LIST_ID = 1; // Temporaliy (whilst in developemt) hard code the list id
 
 /**
- * 1 - Updates the specified rowEL item
+ * 1 - Updates the specified rowEL item in ListObj
  * 2 - calls refresh
  * 
  * @param jquery rowEL 
@@ -108,23 +108,30 @@ function updateItem(rowEL){
 
 
 /**
- * 1 - Removes an item from listObj by index
- * 2 - calls refresh
+ * 1 - Deletse the item from the databse
+ * 2 - calls read
  * 
  * @param jQuery rowEL The tr row element of the item
  */
 function deleteItem(rowEL) {
 
-    // get the index of the item
-    var index = rowEL.attr('data-index');
+    var id = rowEL.attr('data-id');
 
-    // remove the item at the specified index
-    listObj['items'].splice(index, 1);
+    $.ajax({
+        url: 'api/list/item/delete.php',
+        method: 'DELETE',
+        contentType: 'application/json',
+        data: JSON.stringify({id: id}),
+        success: function(response) {
+            console.log(response);
 
-    // log the updated listObj to console
-    console.log(listObj);
-
-    refresh();
+            read();
+        },
+        error: function(response) {
+            console.log("ERROR:");
+            console.log(response);
+         }
+    });
 }
 
 /**
@@ -187,7 +194,7 @@ function refresh() {
         var trClass = (item.is_checked == 1 ? 'class="checked"' : '');
         
         tbodyEL.append('\
-            <tr ' + trClass + ' data-index="' + i +'">\
+            <tr ' + trClass + ' data-id="' + item.id + '" data-index="' + i +'">\
                 <td><input type="text" class="name" value="' + item.name + '"></td>\
                 <td><input type="number" step="any" class="price" value="' + item.price + '"></td>\
                 <td>\
