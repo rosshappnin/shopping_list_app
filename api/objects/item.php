@@ -13,6 +13,7 @@ class Item {
     public $name;
     public $price;
     public $is_checked;
+    public $position;
 
 
     // constructor with $db as database connection
@@ -32,13 +33,13 @@ class Item {
     {
         // select by list id query
         $query = "SELECT
-                    id, list_id, name, price, is_checked
+                    id, list_id, name, price, is_checked, position
                 FROM
                     " . item::TABLE_NAME . " 
                 WHERE
                     list_id = ?
                 ORDER BY
-                    id ASC";
+                    position ASC";
     
         // prepare query statement
         $stmt = $conn->prepare($query);
@@ -69,6 +70,7 @@ class Item {
                 $item->name = $row['name'];
                 $item->price = $row['price'];
                 $item->is_checked = $row['is_checked'];
+                $item->position = $row['position'];
 
                 array_push($itemsArr, $item);
             }
@@ -95,7 +97,8 @@ class Item {
                 list_id = :list_id,
                 name = :name,
                 price = :price,
-                is_checked = :is_checked";
+                is_checked = :is_checked, 
+                position = :position";
 
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -105,12 +108,14 @@ class Item {
         $this->name = (string) htmlspecialchars(strip_tags($this->name));
         $this->price = (float) htmlspecialchars(strip_tags($this->price));
         $this->is_checked = (int) htmlspecialchars(strip_tags($this->is_checked));
+        $this->position = (int) htmlspecialchars(strip_tags($this->position));
 
         // bind values
         $stmt->bindParam(":list_id", $this->list_id);
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":price", $this->price);
         $stmt->bindParam(":is_checked", $this->is_checked);
+        $stmt->bindParam(":position", $this->position);
 
         // execute query
         if($stmt->execute()){
@@ -135,7 +140,8 @@ class Item {
         SET
             name = :name,
             price = :price,
-            is_checked = :is_checked
+            is_checked = :is_checked,
+            position = :position
         WHERE
             id = :id";
 
@@ -147,12 +153,14 @@ class Item {
         $this->name = (string) htmlspecialchars(strip_tags($this->name));
         $this->price = (float) htmlspecialchars(strip_tags($this->price));
         $this->is_checked = (int) htmlspecialchars(strip_tags($this->is_checked));
+        $this->position = (int) htmlspecialchars(strip_tags($this->position));
         
         // bind values
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":price", $this->price);
         $stmt->bindParam(":is_checked", $this->is_checked);
+        $stmt->bindParam(":position", $this->position);
         
         // execute query
         if($stmt->execute()){

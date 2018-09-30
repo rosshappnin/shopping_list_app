@@ -22,8 +22,9 @@ $data = json_decode(file_get_contents("php://input"));
 if(!isset($data->id) || 
     !isset($data->name) ||
     !isset($data->price) ||
-    !isset($data->is_checked)) 
-    {
+    !isset($data->is_checked) ||
+    !isset($data->position)
+    ){
         echo json_encode(
             ["message" => "Missing item properties."]
         ); die;
@@ -43,6 +44,7 @@ if ( is_numeric($data->id) ) {
 $item->name = $data->name;
 $item->price = $data->price;
 $item->is_checked = $data->is_checked;
+$item->position = $data->position;
 
 // update the item
 if($item->update()){

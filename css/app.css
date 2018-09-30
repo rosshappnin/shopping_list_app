@@ -20,6 +20,10 @@ button i {
     padding-right: 5px;
 }
 
+td {
+    position: relative;
+}
+
 tr.checked {
     background-color: #e6e6e6 !important;
 }
@@ -38,4 +42,12 @@ tr.checked input {
 
 .actions-column {
     width: 35%;
+}
+
+i.glyphicon-resize-vertical { 
+    width: 25px; 
+    height: 25px; 
+    font-size: 10px; 
+    position: absolute; 
+    top:5px; 
 }

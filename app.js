@@ -7,7 +7,24 @@ const LIST_ID = 1; // Temporaliy (whilst in developemt) hard code the list id
 $(function(){
     read();
 
-    
+    /*******************************************/
+    /*  Event handlers
+    /*******************************************/
+
+    // Sets up JQuery-UI for drag and drop, re-ordrring of items
+    // On Sortable update handler
+    $('#table-items tbody').sortable({
+        update: function(event, ui){
+            $(this).children().each(function(index) {
+                var rowEL = $(this);
+                if (rowEL.attr('data-position') != (index + 1)) {
+                    rowEL.attr('data-position', (index + 1));
+                    updateItem(rowEL);
+                }
+            });
+        }
+    });
+
     /**
      * Add item button click handler
      * 
@@ -65,6 +82,11 @@ $(function(){
 });
 
 
+/*******************************************/
+/*  Ajax calls to the database
+/*******************************************/
+
+
 /**
  * 1 - Gathers item data submitted in the add new item form
  * 2 - Creates a new item object with the data
@@ -74,6 +96,7 @@ function createItem() {
     var name = $('#input-name').val();
     var price = $('#input-price').val();
     var is_checked = 0;
+    var position = $('#table-items tbody tr').length + 1;
 
     $.ajax({
         url: 'api/list/item/create.php',
@@ -83,7 +106,8 @@ function createItem() {
         data: JSON.stringify({list_id: LIST_ID,
                                 name: name,
                                 price: price,
-                                is_checked: is_checked
+                                is_checked: is_checked,
+                                position: position
                             }),
 
         success: function(response) {
@@ -101,7 +125,7 @@ function createItem() {
  * 1 - Updates the item in the database with the specified id
  * 2 - calls read on success
  * 
- * @param jquery rowEL 
+ * @param jquery rowEL The tr row element of the item
  */
 function updateItem(rowEL) {
     
@@ -109,6 +133,7 @@ function updateItem(rowEL) {
     var newName = rowEL.find('.name').val();
     var newPrice = rowEL.find('.price').val();
     var newIsChecked = (rowEL.hasClass("checked") ? 1 : 0);
+    var newPosition = rowEL.attr('data-position');
 
     $.ajax({
         url: 'api/list/item/update.php',
@@ -117,7 +142,8 @@ function updateItem(rowEL) {
         data: JSON.stringify({id:id, 
                                 name: newName, 
                                 price: newPrice,
-                                is_checked: newIsChecked
+                                is_checked: newIsChecked,
+                                position: newPosition
                             }),
         success: function(response) {
             console.log(response);
@@ -219,8 +245,8 @@ function refresh() {
         var trClass = (item.is_checked == 1 ? 'class="checked"' : '');
         
         tbodyEL.append('\
-            <tr ' + trClass + ' data-id="' + item.id + '">\
-                <td><input type="text" class="name" value="' + item.name + '"></td>\
+            <tr ' + trClass + ' data-id="' + item.id +'" data-position="'+ item.position +'">\
+                <td><i class="glyphicon glyphicon-resize-vertical"></i><input type="text" class="name" value="' + item.name + '"></td>\
                 <td><input type="number" step="any" class="price" value="' + item.price + '"></td>\
                 <td>\
                     <button class="button-check"><i class="glyphicon glyphicon-ok"></i>Check</button>\

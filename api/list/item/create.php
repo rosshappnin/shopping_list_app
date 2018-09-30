@@ -23,7 +23,8 @@ $data = json_decode(file_get_contents("php://input"));
 if(!isset($data->list_id) ||
     !isset($data->name) ||
     !isset($data->price) ||
-    !isset($data->is_checked)
+    !isset($data->is_checked) ||
+    !isset($data->position)
   ){
         echo json_encode(
             ["message" => "Missing item properties."]
@@ -36,6 +37,7 @@ $item->list_id = $data->list_id;
 $item->name = $data->name;
 $item->price = $data->price;
 $item->is_checked = $data->is_checked;
+$item->position = $data->position;
 
 // create the item
 if($item->create()){
