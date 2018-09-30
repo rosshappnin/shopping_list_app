@@ -234,9 +234,11 @@ function refresh() {
 
     // select table body element
     var tbodyEL = $('#table-items tbody');
+    var tfootEL = $('#table-items tfoot');
     
-    // clear table body
+    // clear table elements
     tbodyEL.html('');
+    tfootEL.html('');
 
     // foreach list item, add it to the table
     $.each(items, function(i, item) {
@@ -255,4 +257,37 @@ function refresh() {
             </tr>\
         '); 
     });
+
+    tfootEL.append('\
+        <tr>\
+            <th>Total:</th>\
+            <td><span id="output-total"><span></td>\
+        </tr>\
+    ')
+
+    // update the total
+    calculateTotal();
 }
+
+
+/**
+ * Calculates th sum total of all items in list
+ * And updates the total on page 
+ */
+function calculateTotal() 
+{
+    var total = 0;
+
+    // sum up the total
+    $("#table-items .price").each(function() {
+        var value = $(this).val();
+        //add only if the value is a number
+        if(!isNaN(value) && value.length != 0) {
+            total += parseFloat(value);
+        }
+    });
+
+    // update the total on page
+    $('#output-total').text(total.toFixed(2));   
+    
+};
