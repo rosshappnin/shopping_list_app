@@ -4,7 +4,7 @@
 $(function(){
     read();
 
-
+    
     /**
      * Add item button click handler
      * 
@@ -76,6 +76,8 @@ function createItem() {
     refresh();
 }
 
+var listObj; // stores the state of the shopping list
+const LIST_ID = 1; // Temporaliy (whilst in developemt) hard code the list id
 
 /**
  * 1 - Updates the specified rowEL item
@@ -131,19 +133,21 @@ function read() {
 
     $.ajax({
         method: 'GET',
-        url: 'api/list/data.json',
+        url: 'api/list/read.php?id=' + LIST_ID,
         contentType: 'application/json; charset=utf-8',
         success: function(response) {
             console.log(response);
 
-            // sets up the shopping list obj with data retrieved from the server
-            listObj = (response);
-           
+            // sets the shopping list data
+            listObj = $.parseJSON(response);
+
+            console.log(listObj);
+
            refresh();
         },
-        error: function(response) { 
+        error: function(response) {
             console.log("ERROR:");
-            console.log(response); 
+            console.log(response);
         }
     });
 }
