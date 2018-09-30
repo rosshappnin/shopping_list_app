@@ -79,12 +79,58 @@ $(function(){
         deleteItem(rowEL);
     });
 
+
+    // Update max-spend on change handler
+    $('#input-max-spend').change(function() {
+        updateList();
+    });
+
+
+    // Toggle max spend alert button click handler
+    $('#button-toggle-alert').on('click', function(event) {
+        event.preventDefault();
+
+        var alertBtnText = $('#button-toggle-alert').text();
+        $('#button-toggle-alert').text(alertBtnText == 'Alert off' ? 'Alert on' : 'Alert off');
+        updateList();
+    });
+
 });
 
 
 /*******************************************/
 /*  Ajax calls to the database
 /*******************************************/
+
+
+/**
+ * Updates the lisy propertes to the database
+ */
+function updateList() {
+    var newIs_alert = $('#button-toggle-alert').text() == 'Alert on' ? 1 : 0;
+    var newMax_spend = $('#input-max-spend').val();
+
+    $.ajax({
+        url: 'api/list/update.php',
+        method: 'PUT',
+        contentType: 'application/json',
+
+        data: JSON.stringify({id: LIST_ID,
+                                max_spend: newMax_spend,
+                                is_alert: newIs_alert
+                            }),
+        
+        success: function(response) {
+            console.log(response);
+            
+            read();
+        },
+        error: function(response) { 
+            console.log("ERROR:");
+            console.log(response); 
+        }
+    });
+}
 
 
 /**
@@ -219,8 +265,11 @@ function read() {
  */
 function refresh() {
 
-    // set list title
+    var alertBtnText = ( listObj.is_alert == 1 ? 'Alert on' : 'Alert off');
+    $('#button-toggle-alert').text(alertBtnText);
     $('#list-title').text(listObj.title); 
+    $('#input-max-spend').val(listObj.max_spend);
+    $('#table-items').attr('data-list_id', listObj.id);
 
     // extract the items from the list object
     var items = [];
@@ -265,14 +314,18 @@ function refresh() {
         </tr>\
     ')
 
-    // update the total
-    calculateTotal();
+    // update the total and max_spend
+    var total = calculateTotal();
+    checkSpend(listObj.max_spend, total);
 }
 
 
 /**
  * Calculates th sum total of all items in list
  * And updates the total on page 
+ * 
+ * @return float total, the total sum of all item prices in list
+ * 
  */
 function calculateTotal() 
 {
@@ -288,6 +341,38 @@ function calculateTotal()
     });
 
     // update the total on page
-    $('#output-total').text(total.toFixed(2));   
+    $('#output-total').text(total.toFixed(2)); 
+    
+    // return the total
+    return total;
     
 };
+
+/**
+ * Calculates if the items total is greater than the user's se budget
+ * in max_spend
+ * 
+ * If alert is switched on, ouotputs how much is left or over budget to screen
+ * 
+ * @param float max_spend 
+ * @param float total 
+ */
+function checkSpend(max_spend, total) {
+    
+    var messageEL = $('#max-spend-message');
+    var formEL = $('#form-max-spend');
+
+    formEL.removeClass('over');
+
+    if (listObj.is_alert == 1) {
+        // if total exceeds max spend
+        if (total > max_spend) {
+            formEL.addClass('over');
+            messageEL.text('You are '+ (total - max_spend).toFixed(2) +' over budget!');
+        } else {
+            messageEL.text('You have '+ ( max_spend - total).toFixed(2) +' spend remaining.');
+        }
+    } else {
+        messageEL.text("");
+    }
+}

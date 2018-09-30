@@ -2,14 +2,18 @@
 require_once '../objects/item.php';
 
 class ShoppingList {
+
+    // database table name
+    const TABLE_NAME = "list";
  
-    // database connection and table name
+    // database connection
     private $conn;
-    private $table_name = "list";
  
     // object properties
     public $id;
     public $title;
+    public $max_spend;
+    public $is_alert;
 
     public $items = [];
  
@@ -29,9 +33,9 @@ class ShoppingList {
     {
         // read ShoppingList properties
         $query = "SELECT
-                    id, title
+                    id, title, max_spend, is_alert
                 FROM
-                    " . $this->table_name . "
+                " . ShoppingList::TABLE_NAME . "
                 WHERE
                     id = ?
                 LIMIT
@@ -58,7 +62,9 @@ class ShoppingList {
 
             // set values to object properties
             $this->id = $row['id'];
-            $this->title = $row['title'];;
+            $this->title = $row['title'];
+            $this->max_spend = $row['max_spend'];
+            $this->is_alert = $row['is_alert'];
 
             return true;
 
@@ -75,6 +81,41 @@ class ShoppingList {
     function fetchListItems()
     {       
         $this->items = Item::fetchItemsByListId($this->conn, $this->id);
+    }
+
+    /**
+     * Commits updates of the list properties to the database
+     */
+    function update()
+    {
+        // update query
+        $query = "UPDATE
+            " . ShoppingList::TABLE_NAME . "
+        SET
+            max_spend = :max_spend,
+            is_alert = :is_alert
+        WHERE
+            id = :id";
+
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->id = (int) htmlspecialchars(strip_tags($this->id));
+        $this->max_spend = (string) htmlspecialchars(strip_tags($this->max_spend));
+        $this->is_alert = (int) htmlspecialchars(strip_tags($this->is_alert));
+        
+        // bind values
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(":max_spend", $this->max_spend);
+        $stmt->bindParam(":is_alert", $this->is_alert);
+        
+        // execute query
+        if($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
