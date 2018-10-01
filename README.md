@@ -1,7 +1,7 @@
 # shopping_list_app
 Shopping list application
 
-## Test dataabse
+## Test database
 
 CREATE DATABASE shopping_list;
 
