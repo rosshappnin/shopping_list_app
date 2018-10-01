@@ -28,9 +28,9 @@ INSERT INTO list (title)
     VALUES ("My Shopping List");
 
 
-INSERT INTO products (list_id, name, price, is_checked) VALUES
-        (1, 'Heinz Baked Beans In Tomato Sauce 4 X415g', 2.00, 0),
-        (1, 'Dr. Oetker Ristorante Pizza Pepperoni Salame 320G', 2.50, 0),
-        (1, 'Mcvities Dark Chocolate Digestive 266G', 1.00, 1),
-        (1, 'Mcvities Jaffa Cakes Triple Pack 30 Cakes', 1.25, 1),
-        (1, 'Pepsi Max 24 X 330Ml', 8.00, 0);
+INSERT INTO products (list_id, name, price, is_checked, position) VALUES
+        (1, 'Heinz Baked Beans In Tomato Sauce 4 X415g', 2.00, 0, 1),
+        (1, 'Dr. Oetker Ristorante Pizza Pepperoni Salame 320G', 2.50, 0, 2),
+        (1, 'Mcvities Dark Chocolate Digestive 266G', 1.00, 1, 3),
+        (1, 'Mcvities Jaffa Cakes Triple Pack 30 Cakes', 1.25, 1, 4),
+        (1, 'Pepsi Max 24 X 330Ml', 8.00, 0, 5);
