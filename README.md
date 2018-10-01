@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS items (
     price DECIMAL(6,2) NOT NULL,
     is_checked TINYINT(1) NOT NULL DEFAULT 0,
     position INT UNSIGNED NOT NULL,
-    FOREIGN KEY (list_id) REFERENCES lists(id)
+    FOREIGN KEY (list_id) REFERENCES list(id)
 ) ENGINE=InnoDB;
 
 
