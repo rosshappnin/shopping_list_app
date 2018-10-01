@@ -28,7 +28,7 @@ INSERT INTO list (title)
     VALUES ("My Shopping List");
 
 
-INSERT INTO products (list_id, name, price, is_checked, position) VALUES
+INSERT INTO items (list_id, name, price, is_checked, position) VALUES
         (1, 'Heinz Baked Beans In Tomato Sauce 4 X415g', 2.00, 0, 1),
         (1, 'Dr. Oetker Ristorante Pizza Pepperoni Salame 320G', 2.50, 0, 2),
         (1, 'Mcvities Dark Chocolate Digestive 266G', 1.00, 1, 3),
