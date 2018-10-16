@@ -8,6 +8,8 @@ Shopping list application
 To run the app, you need to deploy it to a web server running PHP and MySQL.\
 The version of PHP developed on was version 7.1.14 but it does not reply on any PHP7 features so in theory it should still run on older versions such ad PHP 5.6 just fine.
 
+The app also requires internet access as it uses CDN's to fetch JQuery, JQuery-UI and Twitter Bootstrap libraries.\
+
 1. clone the GIT repo
 2. create the database and populate with some test data via executing the SQL below.
 
