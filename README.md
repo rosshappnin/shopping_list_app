@@ -33,4 +33,5 @@ INSERT INTO items (list_id, name, price, is_checked, position) VALUES
         (1, 'Dr. Oetker Ristorante Pizza Pepperoni Salame 320G', 2.50, 0, 2),
         (1, 'Mcvities Dark Chocolate Digestive 266G', 1.00, 1, 3),
         (1, 'Mcvities Jaffa Cakes Triple Pack 30 Cakes', 1.25, 1, 4),
-        (1, 'Pepsi Max 24 X 330Ml', 8.00, 0, 5);```
+        (1, 'Pepsi Max 24 X 330Ml', 8.00, 0, 5);
+```
