@@ -18,6 +18,8 @@ The app also requires internet access as it uses CDN's to fetch JQuery, JQuery-U
 ```
 CREATE DATABASE shopping_list;
 
+USE shopping_list;
+
 CREATE TABLE IF NOT EXISTS list (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
