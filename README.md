@@ -8,7 +8,6 @@ Shopping list application
 CREATE TABLE IF NOT EXISTS list (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    user_id INT UNSIGNED NOT NULL,
     max_spend DECIMAL(6,2) NOT NULL,
     is_alert TINYINT(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB;
@@ -23,10 +22,8 @@ CREATE TABLE IF NOT EXISTS items (
     FOREIGN KEY (list_id) REFERENCES list(id)
 ) ENGINE=InnoDB;
 
-
 INSERT INTO list (title)
     VALUES ("My Shopping List");
-
 
 INSERT INTO items (list_id, name, price, is_checked, position) VALUES
         (1, 'Heinz Baked Beans In Tomato Sauce 4 X415g', 2.00, 0, 1),
