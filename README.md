@@ -1,6 +1,8 @@
 # shopping_list_app
 Shopping list application
 
+![Figure 1-1](images/shopping_app.png "Figure 1-1")
+
 ## Test database
 
 ```CREATE DATABASE shopping_list;
