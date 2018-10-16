@@ -5,7 +5,7 @@ Shopping list application
 
 ## Setting up
 
-To run the app, you need to deploy it to a web server running PHP and MySQL
+To run the app, you need to deploy it to a web server running PHP and MySQL.\
 The version of PHP developed on was version 7.1.14 but it does not reply on any PHP7 features so in theory it should still run on older versions such ad PHP 5.6 just fine.
 
 1. clone the GIT repo
